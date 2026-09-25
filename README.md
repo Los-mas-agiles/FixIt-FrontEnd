@@ -30,7 +30,7 @@ Proyecto del curso de **Ágiles (1ASI570)** — UPC, Ingeniería de Software, 20
 
 ## Requisitos
 
-- Node.js 22 o superior
+- Node.js 24 (LTS) o superior
 - VS Code con la extensión **Vue - Official** (recomendado)
 
 ## Puesta en marcha

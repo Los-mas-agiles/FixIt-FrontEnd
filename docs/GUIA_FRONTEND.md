@@ -19,7 +19,7 @@ El frontend **solo habla con nuestra API** (`VITE_API_URL`). Nunca con Supabase 
 
 ## 1. Antes de empezar
 
-- Node.js 22 (`node -v`)
+- Node.js 24 LTS o superior (`node -v`)
 - VS Code con la extensión **Vue - Official**
 - Acceso de escritura al repo FixIt-FrontEnd
 
