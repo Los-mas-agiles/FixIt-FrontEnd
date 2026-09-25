@@ -45,9 +45,24 @@ npm run dev          # http://localhost:5173
 
 | Variable | Descripción |
 |---|---|
-| `VITE_API_URL` | URL base de la API, terminada en `/api` (ej. `http://localhost:3000/api`) |
+| `VITE_API_URL` | URL base de la API, terminada en `/api` |
 
 No hay secretos en el frontend: toda la seguridad la aplica la API.
+
+## Cómo conectarse al backend
+
+El backend ya está desplegado y con datos de demo, **no hace falta correrlo en local**:
+
+```
+VITE_API_URL=https://fix-it-back-end.vercel.app/api
+```
+
+- **Estado:** listos login y roles, reporte de incidencias con foto, tablero Kanban (cambio de estado, asignación, límite de WIP), clasificación con IA y notificaciones (en la app + push). **Pendiente:** KPIs y CFD del dashboard (Fase 6).
+- **Cuentas de demo** (contraseña `FixIt2026!`): `residente1@olivos.demo`, `tecnico1@olivos.demo`, `admin@olivos.demo` y el resto en [`docs/CONTRATO_API.md`](docs/CONTRATO_API.md#3-cuentas-de-demo-las-crea-el-seed-del-backend).
+- **Datos:** Los Olivos ya tiene 12 incidencias en distintos estados, con historial y avisos.
+- **Probar la API sin código:** abrir [`docs/PROBAR_API.http`](docs/PROBAR_API.http) con la extensión **REST Client** de VS Code y pulsar "Send Request".
+- **CORS:** la API acepta `localhost:5173`, `localhost:4173` y `https://fix-it-front-end*.vercel.app`. Al crear el proyecto en Vercel, usar el nombre **`fix-it-front-end`** (o avisar a Edery si es otro).
+- **Si algo del backend no calza con el contrato**, avisar a Edery antes de "arreglarlo" en el frontend.
 
 ## Scripts
 

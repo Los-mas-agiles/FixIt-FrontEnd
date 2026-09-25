@@ -126,7 +126,7 @@ src/sw.ts               # service worker propio (para manejar los push)
 VITE_API_URL=http://localhost:3000/api
 ```
 
-En Vercel: `VITE_API_URL=https://<api-de-produccion>/api`.
+En Vercel y en local: `VITE_API_URL=https://fix-it-back-end.vercel.app/api` (la API de producción ya tiene datos de demo). Para el proyecto de Vercel usar el nombre **`fix-it-front-end`**: la API ya acepta peticiones (CORS) desde ese dominio y sus previews.
 
 ## 6. El cliente HTTP (`src/api/client.ts`)
 
@@ -261,7 +261,7 @@ cp .env.example .env
 npm run dev          # http://localhost:5173
 ```
 
-Para usar la API: apuntar `VITE_API_URL` a la API desplegada de desarrollo (la pasa Edery) o a `http://localhost:3000/api` si tienen el backend corriendo. Las cuentas de demo están en [`CONTRATO_API.md`](CONTRATO_API.md#3-cuentas-de-demo-las-crea-el-seed-del-backend).
+Para usar la API: `VITE_API_URL=https://fix-it-back-end.vercel.app/api` (no hace falta correr el backend). Para probar los endpoints sin escribir código, usar [`docs/PROBAR_API.http`](PROBAR_API.http) con la extensión **REST Client** de VS Code. Las cuentas de demo están en [`CONTRATO_API.md`](CONTRATO_API.md#3-cuentas-de-demo-las-crea-el-seed-del-backend).
 
 ## 13. Definition of Done (frontend)
 

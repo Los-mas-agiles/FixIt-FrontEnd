@@ -1,0 +1,64 @@
+# Peticiones de ejemplo contra la API de FixIt.
+# Uso: instalar la extensión "REST Client" de VS Code y pulsar "Send Request" sobre cada bloque.
+# El login guarda el token automáticamente para las peticiones siguientes.
+
+@api = https://fix-it-back-end.vercel.app/api
+
+### Salud de la API y de la base de datos
+GET {{api}}/health/db
+
+### Login como residente (cambia el email para probar otros roles: tecnico1@olivos.demo, admin@olivos.demo)
+# @name login
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{ "email": "residente1@olivos.demo", "password": "FixIt2026!" }
+
+###
+@token = {{login.response.body.token}}
+
+### Usuario actual
+GET {{api}}/auth/me
+Authorization: Bearer {{token}}
+
+### Mis incidencias (residente) / todas las del edificio (técnico y admin)
+GET {{api}}/incidencias
+Authorization: Bearer {{token}}
+
+### Filtros: ?estado=pendiente|en_proceso|resuelto  ?prioridad=alta|media|baja  ?asignadoA=me
+GET {{api}}/incidencias?estado=en_proceso
+Authorization: Bearer {{token}}
+
+### Detalle con historial (id de una incidencia de demo)
+GET {{api}}/incidencias/10000000-0000-4000-8000-000000000001
+Authorization: Bearer {{token}}
+
+### Reportar una incidencia SIN foto (solo residentes). La IA la clasifica en 1-8 s.
+POST {{api}}/incidencias
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=FixIt
+
+--FixIt
+Content-Disposition: form-data; name="descripcion"
+
+[PRUEBA] Se escucha una fuga de agua dentro de la pared del baño
+--FixIt--
+
+### Avisos (campanita)
+GET {{api}}/notificaciones
+Authorization: Bearer {{token}}
+
+### Marcar todos los avisos como leídos
+POST {{api}}/notificaciones/leer-todas
+Authorization: Bearer {{token}}
+
+### Técnicos del edificio (solo admin: loguearse antes como admin@olivos.demo)
+GET {{api}}/usuarios?rol=mantenimiento
+Authorization: Bearer {{token}}
+
+### Tomar una incidencia (técnico) — cambia el id por uno pendiente
+PATCH {{api}}/incidencias/10000000-0000-4000-8000-000000000010/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "estado": "en_proceso" }
