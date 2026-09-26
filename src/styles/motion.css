@@ -1,0 +1,39 @@
+/* ═══════════════════════════════════════════════════════════════
+   MODULAR BLOCK CITY · Movimiento
+   Un solo easing: var(--mbc-ease) = cubic-bezier(.22, 1, .36, 1)
+   Solo se animan transform, opacity y filter.
+   PROHIBIDO: bounce, overshoot visible, confeti, sonido.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Entrada de elementos (la cascada la aplica JS con delay = i × --mbc-stagger) */
+@keyframes mbc-enter{ from{ opacity:0; transform:translateY(18px); } to{ opacity:1; transform:none; } }
+
+/* Toasts: viga que encaja */
+@keyframes mbc-beam-in     { from{ transform:translateX(calc(100% + 40px)); }  to{ transform:none; } }
+@keyframes mbc-beam-out    { from{ transform:none; } to{ transform:translateX(calc(100% + 40px)); } }
+@keyframes mbc-beam-in-top { from{ transform:translateY(calc(-100% - 40px)); } to{ transform:none; } }
+@keyframes mbc-beam-out-top{ from{ transform:none; } to{ transform:translateY(calc(-100% - 40px)); } }
+
+/* Pulso único al llegar a 100 % (una sola vez, nunca en bucle) */
+@keyframes mbc-pulse{
+  0%  { transform:scale(1);    box-shadow:inset 0 0 0 2px rgba(44,44,44,.07), 0 0 0 0    rgba(44,44,44,.3); }
+  45% { transform:scale(1.06); box-shadow:inset 0 0 0 2px rgba(44,44,44,.07), 0 0 0 10px rgba(44,44,44,0); }
+  100%{ transform:scale(1);    box-shadow:inset 0 0 0 2px rgba(44,44,44,.07), 0 0 0 0    rgba(44,44,44,0); }
+}
+.pulse{ animation:mbc-pulse var(--mbc-d-pulse) var(--mbc-ease) 1; }
+
+/* Edificio de fondo: aparición inicial */
+@keyframes mbc-obra-in{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+.ob-blocks{ animation:mbc-obra-in var(--mbc-d-crane) var(--mbc-ease) both; }
+
+/* ── Movimiento reducido ──────────────────────────────────────
+   Apaga TODO lo decorativo (grúa, tilt, cursor con lag, grid).
+   Deja solo transiciones de estado ≤ 150ms.                    */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration:120ms!important; animation-delay:0s!important; animation-iteration-count:1!important;
+    transition-duration:120ms!important; transition-delay:0s!important; scroll-behavior:auto!important;
+  }
+  .block[data-tilt]:hover{ transform:translateY(-4px); }   /* lift simple en lugar del tilt */
+  .plano-grid{ transform:none!important; }
+}

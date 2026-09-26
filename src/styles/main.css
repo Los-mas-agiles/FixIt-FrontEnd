@@ -1,0 +1,45 @@
+/* ═══════════════════════════════════════════════════════════════
+   FixIt · hoja de estilos de entrada
+   Sistema visual: Modular Block City (tokens, base, componentes y movimiento
+   copiados de la guía de estilos). Tailwind queda para utilidades de layout.
+   Orden de capas: theme → base → components → utilities (las utilidades ganan).
+   ═══════════════════════════════════════════════════════════════ */
+
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./base.css" layer(base);
+@import "./components.css" layer(components);
+@import "./motion.css" layer(components);
+@import "./app.css" layer(components);
+
+/* Los tokens de Block City también como utilidades de Tailwind:
+   bg-mint, text-ink-2, font-display, rounded-block, etc. */
+@theme inline {
+  --color-bg: var(--mbc-bg);
+  --color-surface: var(--mbc-surface);
+  --color-mint: var(--mbc-mint);
+  --color-lav: var(--mbc-lav);
+  --color-peach: var(--mbc-peach);
+  --color-sky: var(--mbc-sky);
+  --color-brick: var(--mbc-brick);
+  --color-ink: var(--mbc-ink);
+  --color-ink-2: var(--mbc-ink-2);
+  --color-ink-3: var(--mbc-ink-3);
+  --color-err: var(--mbc-err);
+  --color-acc-fg: var(--mbc-acc-fg);
+  --color-acc-fg-2: var(--mbc-acc-fg-2);
+
+  --font-display: var(--mbc-f-display);
+  --font-body: var(--mbc-f-body);
+  --font-mono: var(--mbc-f-mono);
+
+  --radius-block: var(--mbc-r-lg);
+  --radius-md: var(--mbc-r-md);
+  --radius-sm: var(--mbc-r-sm);
+
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1100px;
+}
+
+:root { color-scheme: light; }

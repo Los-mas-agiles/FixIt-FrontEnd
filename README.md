@@ -28,6 +28,19 @@ Proyecto del curso de **Ágiles (1ASI570)** — UPC, Ingeniería de Software, 20
 - **Vitest** + **Vue Test Utils** (tests)
 - Despliegue en **Vercel**
 
+## Estilo visual: Modular Block City
+
+La interfaz sigue la guía de estilos **Modular Block City** (la metáfora de una obra que se construye entre vecinos): bloques con radio 20 px, sombra sólida sin blur y un *stud* arriba a la izquierda; pastel sobre casi-blanco; Baloo 2 para titulares, Space Grotesk para texto y JetBrains Mono para datos; un solo easing.
+
+| Archivo | Qué tiene |
+|---|---|
+| `src/styles/tokens.css`, `base.css`, `components.css`, `motion.css` | Copia de la guía (no editar a mano: si cambia la guía, se vuelven a copiar) |
+| `src/styles/app.css` | Piezas propias de FixIt (tablero, campanita, detalle…) hechas solo con los tokens |
+| `src/styles/main.css` | Entrada: Tailwind v4 + capas; los tokens también existen como utilidades (`bg-mint`, `font-display`…) |
+| `src/lib/blockCity.ts` | Comportamientos de la guía en TypeScript: cascada de entrada, contadores, bloques magnéticos, cursor, mini-escenas y el edificio de fondo |
+
+Colores por estado: **pendiente = durazno**, **en proceso = celeste**, **resuelta = menta**, siempre con texto y *stepper* (el color nunca es la única señal). La prioridad se muestra con barras de nivel y texto; la **alta** va en tag oscuro (la guía no usa rojo en la interfaz).
+
 ## Requisitos
 
 - Node.js 24 (LTS) o superior
@@ -79,15 +92,19 @@ VITE_API_URL=https://fix-it-back-end.vercel.app/api
 ```
 src/
   api/            # llamadas a la API (una por recurso) + cliente HTTP
-  composables/    # lógica reutilizable: carga, polling, push
+  composables/    # lógica reutilizable: carga, polling, push, toasts, acciones
+  directives/     # v-tilt (bloques magnéticos)
+  lib/            # blockCity.ts: comportamientos de la guía de estilos
   components/     # ui/, incidencia/, layout/, kpis/
   router/         # rutas y guards por rol
   stores/         # sesión (Pinia)
   types/          # tipos del contrato de API
   utils/          # fechas, etiquetas en español
   views/          # pantallas por rol
+  styles/         # guía Modular Block City + estilos de FixIt
   sw.ts           # service worker (notificaciones push)
 public/icons/     # íconos de la PWA
+tests/            # Vitest: utilidades, cliente HTTP y guards
 docs/
 ```
 

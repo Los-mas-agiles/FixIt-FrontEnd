@@ -1,0 +1,106 @@
+/* ═══════════════════════════════════════════════════════════════
+   MODULAR BLOCK CITY · Tokens de diseño
+   Fuente única de verdad. Todo valor visual del sistema sale de aquí.
+   Si necesitas un valor que no existe, agrégalo aquí primero.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root{
+  /* ── Superficies ─────────────────────────────────────────── */
+  --mbc-bg:            #FAFAFA;   /* fondo de página */
+  --mbc-surface:       #FFFFFF;   /* bloques blancos, campos */
+
+  /* ── Bloques pastel (la paleta de piezas) ────────────────── */
+  --mbc-mint:          #B8E8D0;   /* resuelto, confirmado, comunidad */
+  --mbc-lav:           #C9B8E8;   /* juntas, votación, seguridad */
+  --mbc-peach:         #F2C4A8;   /* pendiente, quejas, obras */
+  --mbc-sky:           #BFE0F0;   /* en curso, mantenimiento, servicios */
+  --mbc-brick:         #F5E6A3;   /* inicio, destacados, casco del trabajador */
+
+  /* Variantes oscuras: SOLO para trazos, bordes de SVG e ilustración.
+     Nunca para texto. */
+  --mbc-mint-d:        #5FAE88;
+  --mbc-lav-d:         #8B72C0;
+  --mbc-peach-d:       #C98763;
+  --mbc-sky-d:         #6AAAD0;
+
+  /* ── Tinta (texto) ───────────────────────────────────────── */
+  --mbc-ink:           #2C2C2C;   /* texto principal · AA en todo pastel */
+  --mbc-ink-2:         #3F3F3F;   /* texto secundario · AA en todo pastel */
+  --mbc-ink-3:         #555555;   /* metadatos · SOLO sobre blanco, #FAFAFA, menta, celeste, durazno, brick (falla en lavanda: 4.08) */
+  --mbc-err:           #8A1F11;   /* errores de formulario · AA en todo pastel */
+
+  /* ── Acento oscuro (botones, banners) ────────────────────── */
+  --mbc-acc-bg:        #2C2C2C;
+  --mbc-acc-fg:        #F5E6A3;   /* 11.13:1 sobre --mbc-acc-bg */
+  --mbc-acc-fg-2:      #DCD3AE;   /* secundario sobre oscuro · 9.29:1 */
+
+  /* ── Líneas ──────────────────────────────────────────────── */
+  --mbc-line:          rgba(44,44,44,.14);   /* contornos de bloques blancos, chips */
+  --mbc-line-soft:     rgba(44,44,44,.07);
+  --mbc-line-strong:   rgba(44,44,44,.22);
+  --mbc-grid-line:     rgba(44,44,44,.06);   /* grid de plano */
+
+  /* ── Tipografía ──────────────────────────────────────────── */
+  --mbc-f-display:     'Baloo 2', ui-rounded, system-ui, sans-serif;
+  --mbc-f-body:        'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --mbc-f-mono:        'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+
+  /* Escala (display fluida, cuerpo fija) */
+  --mbc-t-hero:        clamp(46px, 8.6vw, 108px);  /* Baloo 700 · lh .94 · ls -.025em */
+  --mbc-t-h1:          clamp(38px, 6.2vw, 68px);   /* Baloo 700 · lh 1.05 · ls -.015em */
+  --mbc-t-h2:          clamp(30px, 4.2vw, 44px);   /* Baloo 700 · lh 1.05 */
+  --mbc-t-h3:          21px;                        /* Baloo 600 · lh 1.15 */
+  --mbc-t-num:         44px;                        /* Baloo 700 · cifras grandes */
+  --mbc-t-lede:        18px;                        /* Space Grotesk 400 · lh 1.55 */
+  --mbc-t-body:        16px;                        /* Space Grotesk 400 · lh 1.55 */
+  --mbc-t-small:       14px;                        /* Space Grotesk 400/500 */
+  --mbc-t-label:       12px;                        /* JetBrains Mono 500 · MAYÚSCULAS · ls .06–.08em */
+  --mbc-t-tag:         11px;                        /* JetBrains Mono 500 · MAYÚSCULAS · ls .05em */
+
+  /* ── Espaciado (base 4) ──────────────────────────────────── */
+  --mbc-s-1:  4px;   --mbc-s-2:  8px;   --mbc-s-3: 12px;  --mbc-s-4: 16px;
+  --mbc-s-5: 20px;   --mbc-s-6: 24px;   --mbc-s-7: 28px;  --mbc-s-8: 32px;
+  --mbc-s-10: 40px;  --mbc-s-12: 48px;  --mbc-s-16: 64px;
+
+  /* ── Geometría ───────────────────────────────────────────── */
+  --mbc-r-lg:  20px;   /* bloques / cards */
+  --mbc-r-md:  16px;   /* pestañas, toasts, fechas */
+  --mbc-r-sm:  14px;   /* botones, campos */
+  --mbc-r-xs:  12px;   /* chips, segmentados */
+  --mbc-r-tag:  8px;   /* tags, contadores, pastillas */
+
+  --mbc-stud:  18px;   /* diámetro del stud de bloque */
+
+  /* ── Sombras SÓLIDAS (nunca blur) ────────────────────────── */
+  /* Se aplican con filter: drop-shadow() para poder animarlas
+     sin salir de transform/opacity/filter. */
+  --mbc-sh-block:      drop-shadow(0 8px 0 rgba(0,0,0,.08));
+  --mbc-sh-block-max:  drop-shadow(0 14px 0 rgba(0,0,0,.09));   /* tope del tilt */
+  --mbc-sh-tab:        drop-shadow(0 6px 0 rgba(0,0,0,.10));
+  --mbc-sh-btn:        drop-shadow(0 5px 0 rgba(0,0,0,.30));
+  --mbc-sh-btn-press:  drop-shadow(0 1px 0 rgba(0,0,0,.30));
+  --mbc-sh-small:      drop-shadow(0 4px 0 rgba(0,0,0,.07));
+  --mbc-sh-stud:       0 3px 0 rgba(0,0,0,.16);                  /* box-shadow estático */
+
+  /* ── Movimiento ──────────────────────────────────────────── */
+  --mbc-ease:          cubic-bezier(.22, 1, .36, 1);   /* ÚNICO easing del sistema */
+  --mbc-d-press:       120ms;   /* presionar */
+  --mbc-d-release:     150ms;   /* soltar / asentar */
+  --mbc-d-micro:       350ms;   /* contadores, pastillas */
+  --mbc-d-fill:        400ms;   /* concreto vertiéndose, labels, FLIP */
+  --mbc-d-settle:      500ms;   /* vuelta del tilt, bloques de escena */
+  --mbc-d-grid:        600ms;   /* nivelación del plano, entrada de toast */
+  --mbc-d-enter:       700ms;   /* entrada de secciones */
+  --mbc-d-pulse:       800ms;   /* pulso del 100 % */
+  --mbc-d-crane:       1200ms;  /* traslado de bloque en la grúa */
+  --mbc-stagger:       180ms;   /* cascada (rango válido 150–250) */
+
+  /* ── Layout ──────────────────────────────────────────────── */
+  --mbc-max:           1240px;
+  --mbc-gutter:        16px;
+  --mbc-touch:         44px;    /* objetivo táctil mínimo */
+  --mbc-z-bg: 0; --mbc-z-app: 1; --mbc-z-nav: 40; --mbc-z-toast: 120; --mbc-z-cursor: 400;
+}
+
+@media (min-width: 768px){  :root{ --mbc-gutter: 24px; } }
+@media (min-width: 1100px){ :root{ --mbc-gutter: 32px; } }
