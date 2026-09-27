@@ -51,7 +51,7 @@ async function entrar() {
 </script>
 
 <template>
-  <section ref="raiz" class="plano login" data-cursor="nivel" aria-labelledby="h1">
+  <section ref="raiz" class="plano login" aria-labelledby="h1">
     <div class="plano-grid" aria-hidden="true"></div>
     <div class="wrap login-wrap">
       <div class="split">

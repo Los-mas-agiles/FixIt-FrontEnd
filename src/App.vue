@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, watch } from 'vue'
+import { computed, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useSessionStore } from '@/stores/session'
 import { toast } from '@/composables/useToast'
-import { cursor } from '@/lib/blockCity'
 import IconSprite from '@/components/ui/IconSprite.vue'
 import ToastHost from '@/components/ui/ToastHost.vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
@@ -36,8 +35,6 @@ router.afterEach(() => {
 
 // La barra inferior del móvil reserva espacio solo cuando existe
 watch(conSesion, (v) => document.body.classList.toggle('has-dock', v), { immediate: true })
-
-onMounted(() => cursor.init())
 </script>
 
 <template>

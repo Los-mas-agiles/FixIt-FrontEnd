@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════
    Modular Block City · comportamientos (port a TypeScript de js/block-city.js)
-   enter · rollTo · bindTilt · cursor · scene · obra
+   enter · rollTo · bindTilt · scene · obra
+   Sin la capa F5 (cursor temático + grid que se inclina): FixIt usa el cursor del sistema.
    Los toasts viven en composables/useToast.ts + components/ui/ToastHost.vue.
    ═══════════════════════════════════════════════════════════════ */
 
@@ -123,81 +124,6 @@ export function bindTilt(el: TiltEl, { amp = 6 } = {}) {
   }
 }
 export function unbindTilt(el: TiltEl) { el.__untilt?.() }
-
-/* ── F5 · Cursor temático + grid de plano ─────────────────── */
-const CURSOR_HTML = `
-<div id="mbc-cursor" class="is-hidden" data-type="llana" aria-hidden="true">
-  <svg class="cur cur-llana" viewBox="0 0 34 34"><path d="M3 3 L19 7.5 L23.5 20 L8 15 Z" fill="#F5E6A3" stroke="#2C2C2C" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 7.5 L18.5 17" stroke="#2C2C2C" stroke-width="1.4" stroke-linecap="round" opacity=".45"/><path d="M21.5 18.5 L25 22" stroke="#2C2C2C" stroke-width="2.2" stroke-linecap="round"/><rect x="24.5" y="19.5" width="6" height="11" rx="3" transform="rotate(-45 27.5 25)" fill="#2C2C2C"/></svg>
-  <svg class="cur cur-gancho" viewBox="0 0 34 34"><circle cx="17" cy="6" r="3.6" fill="none" stroke="#2C2C2C" stroke-width="2.4"/><rect x="12" y="9.5" width="10" height="6" rx="2" fill="#F2C4A8" stroke="#2C2C2C" stroke-width="2"/><path d="M17 15.5 V21 a5.5 5.5 0 1 1 -5.5 5.5" fill="none" stroke="#2C2C2C" stroke-width="2.8" stroke-linecap="round"/></svg>
-  <svg class="cur cur-nivel" viewBox="0 0 34 34"><rect x="2" y="11" width="30" height="12" rx="4" fill="#C9B8E8" stroke="#2C2C2C" stroke-width="2"/><rect x="10.5" y="14" width="13" height="6" rx="3" fill="#FFFFFF" stroke="#2C2C2C" stroke-width="1.6"/><line x1="17" y1="13.5" x2="17" y2="20.5" stroke="#2C2C2C" stroke-width="1" opacity=".5"/><circle class="cur-bubble" cx="17" cy="17" r="2.2" fill="#B8E8D0" stroke="#2C2C2C" stroke-width="1.2"/></svg>
-</div>
-<div id="mbc-cursor-dot" class="is-hidden" aria-hidden="true"></div>`
-
-export const cursor = (() => {
-  let el: HTMLElement
-  let dot: HTMLElement
-  let bubble: SVGElement
-  let x = 0, y = 0, tx = 0, ty = 0, raf = 0, seen = false, gridRaf = 0, rot = 0, started = false
-  const root = document.documentElement
-  const enabled = () => mqFine.matches && !reduced()
-  const sync = () => root.classList.toggle('has-cursor', enabled())
-  const ACTION = 'button, a[href], summary, select, label.chip, label.check, label.foto-pick, [role="button"], [data-cursor="gancho"]'
-  const TEXT = 'input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), textarea'
-
-  function tick() {
-    x += (tx - x) * 0.18 // lerp 0.18 = asentamiento
-    y += (ty - y) * 0.18
-    el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`
-    raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.2 ? requestAnimationFrame(tick) : 0
-  }
-  function tiltGrid() {
-    gridRaf = 0
-    $$('.plano-grid').forEach((g) => { if (g.offsetParent !== null) g.style.transform = `rotate(${rot}deg)` })
-    bubble.style.transform = `translateX(${(-rot * 2.4).toFixed(2)}px)`
-  }
-  function onMove(e: PointerEvent) {
-    if (e.pointerType !== 'mouse' || !enabled()) return
-    tx = e.clientX
-    ty = e.clientY
-    if (!seen) { x = tx; y = ty; seen = true; el.classList.remove('is-hidden'); dot.classList.remove('is-hidden') }
-    dot.style.transform = `translate3d(${tx}px, ${ty}px, 0)`
-    const t = e.target instanceof Element ? e.target : null
-    let type = 'llana'
-    let hidden = false
-    if (t) {
-      if (t.closest(TEXT)) hidden = true
-      else if (t.closest(ACTION)) type = 'gancho'
-      else {
-        const d = t.closest<HTMLElement>('[data-cursor]')
-        if (d?.dataset.cursor) type = d.dataset.cursor
-      }
-    }
-    if (el.dataset.type !== type) el.dataset.type = type
-    el.classList.toggle('is-hidden', hidden)
-    dot.classList.toggle('is-hidden', hidden)
-    if (!raf) raf = requestAnimationFrame(tick)
-    const nrot = +(clamp((tx / innerWidth) * 2 - 1) * 1.5).toFixed(2) // máx ±1.5°
-    if (nrot !== rot) { rot = nrot; if (!gridRaf) gridRaf = requestAnimationFrame(tiltGrid) }
-  }
-  return {
-    init() {
-      if (started) return
-      started = true
-      document.body.insertAdjacentHTML('beforeend', CURSOR_HTML)
-      el = $('#mbc-cursor')!
-      dot = $('#mbc-cursor-dot')!
-      bubble = $<SVGElement>('.cur-bubble', el)!
-      sync()
-      mqFine.addEventListener('change', sync)
-      mqReduce.addEventListener('change', () => { sync(); if (reduced()) { rot = 0; tiltGrid() } })
-      document.addEventListener('pointermove', onMove, { passive: true })
-      document.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') el.classList.add('is-down') })
-      document.addEventListener('pointerup', () => el.classList.remove('is-down'))
-      root.addEventListener('mouseleave', () => { el.classList.add('is-hidden'); dot.classList.add('is-hidden') })
-    },
-    regrid() { if (started && enabled()) tiltGrid() },
-  }
-})()
 
 /* ── F3 · Mini-escena de progreso ─────────────────────────────
    host: elemento vacío dentro de un .block de color (usa su --c)

@@ -37,7 +37,7 @@ La interfaz sigue la guía de estilos **Modular Block City** (la metáfora de un
 | `src/styles/tokens.css`, `base.css`, `components.css`, `motion.css` | Copia de la guía (no editar a mano: si cambia la guía, se vuelven a copiar) |
 | `src/styles/app.css` | Piezas propias de FixIt (tablero, campanita, detalle…) hechas solo con los tokens |
 | `src/styles/main.css` | Entrada: Tailwind v4 + capas; los tokens también existen como utilidades (`bg-mint`, `font-display`…) |
-| `src/lib/blockCity.ts` | Comportamientos de la guía en TypeScript: cascada de entrada, contadores, bloques magnéticos, cursor, mini-escenas y el edificio de fondo |
+| `src/lib/blockCity.ts` | Comportamientos de la guía en TypeScript: cascada de entrada, contadores, bloques magnéticos, mini-escenas y el edificio de fondo. El cursor es el del sistema (no usamos la capa de cursor temático) |
 
 Colores por estado: **pendiente = durazno**, **en proceso = celeste**, **resuelta = menta**, siempre con texto y *stepper* (el color nunca es la única señal). La prioridad se muestra con barras de nivel y texto; la **alta** va en tag oscuro (la guía no usa rojo en la interfaz).
 
@@ -70,7 +70,7 @@ El backend ya está desplegado y con datos de demo, **no hace falta correrlo en 
 VITE_API_URL=https://fix-it-back-end.vercel.app/api
 ```
 
-- **Estado:** listos login y roles, reporte de incidencias con foto, tablero Kanban (cambio de estado, asignación, límite de WIP), clasificación con IA y notificaciones (en la app + push). **Pendiente:** KPIs y CFD del dashboard (Fase 6).
+- **Estado:** listos login y roles, reporte de incidencias con foto, tablero Kanban (cambio de estado, asignación, límite de WIP), clasificación con IA, notificaciones (en la app + push), KPIs y CFD del dashboard, y gestión de cuentas para el piloto (cambio de contraseña, contraseña temporal, desactivar/reactivar).
 - **Cuentas de demo** (contraseña `FixIt2026!`): `residente1@olivos.demo`, `tecnico1@olivos.demo`, `admin@olivos.demo` y el resto en [`docs/CONTRATO_API.md`](docs/CONTRATO_API.md#3-cuentas-de-demo-las-crea-el-seed-del-backend).
 - **Datos:** Los Olivos ya tiene 12 incidencias en distintos estados, con historial y avisos.
 - **Probar la API sin código:** abrir [`docs/PROBAR_API.http`](docs/PROBAR_API.http) con la extensión **REST Client** de VS Code y pulsar "Send Request".
@@ -114,14 +114,14 @@ Todas con la contraseña `FixIt2026!` — ver la tabla completa en [`docs/CONTRA
 
 ## Estado por fases
 
-- [ ] Fase 0 — Cimientos (proyecto, layout, cliente HTTP, CI, deploy)
-- [ ] Fase 1 — HU6 Login con roles
-- [ ] Fase 2 — HU1 Reporte de incidencias con foto
-- [ ] Fase 3 — HU3 Tablero Kanban
-- [ ] Fase 4 — HU2 Clasificación con IA (badges y corrección manual)
-- [ ] Fase 5 — HU4 Notificaciones (PWA + push)
-- [ ] Fase 6 — HU5 Dashboard de KPIs y CFD
-- [ ] Fase 7 — Piloto y cierre
+- [x] Fase 0 — Cimientos (proyecto, layout, cliente HTTP, CI, deploy)
+- [x] Fase 1 — HU6 Login con roles
+- [x] Fase 2 — HU1 Reporte de incidencias con foto
+- [x] Fase 3 — HU3 Tablero Kanban
+- [x] Fase 4 — HU2 Clasificación con IA (badges y corrección manual)
+- [x] Fase 5 — HU4 Notificaciones (PWA + push)
+- [x] Fase 6 — HU5 Dashboard de KPIs y CFD
+- [ ] Fase 7 — Piloto y cierre (en el front ya está: "Mi cuenta" y la gestión de cuentas en Usuarios)
 
 ## Cómo contribuir
 

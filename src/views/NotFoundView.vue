@@ -8,7 +8,7 @@ const destino = computed(() => (session.autenticado ? '/' : '/login'))
 </script>
 
 <template>
-  <section class="plano" data-cursor="nivel" aria-labelledby="h1">
+  <section class="plano" aria-labelledby="h1">
     <div class="plano-grid" aria-hidden="true"></div>
     <div class="wrap vista no-encontrado">
       <p class="eyebrow">Error 404</p>

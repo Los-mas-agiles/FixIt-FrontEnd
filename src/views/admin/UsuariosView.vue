@@ -2,20 +2,27 @@
 import { computed, ref, watch } from 'vue'
 import * as usuariosApi from '@/api/usuarios'
 import { mensajeDeError } from '@/api/client'
-import type { RolUsuario } from '@/types/models'
+import type { RolUsuario, Usuario } from '@/types/models'
 import { useCarga } from '@/composables/useCarga'
 import { useEntrada } from '@/composables/useEntrada'
 import { useTecnicos } from '@/composables/useTecnicos'
 import { toast } from '@/composables/useToast'
 import { useSessionStore } from '@/stores/session'
 import { plural, textoRol } from '@/utils/textos'
+import { generarClave } from '@/utils/claves'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import CargandoBloques from '@/components/ui/CargandoBloques.vue'
 import EstadoError from '@/components/ui/EstadoError.vue'
+import FilaUsuario from '@/components/usuarios/FilaUsuario.vue'
 
 const session = useSessionStore()
-const { datos, cargando, error, recargar } = useCarga(() => usuariosApi.listar())
+// Activos e inactivos en paralelo: los desactivados se pueden reactivar
+const { datos, cargando, error, recargar } = useCarga(async () => {
+  const [activos, inactivos] = await Promise.all([usuariosApi.listar(), usuariosApi.listar({ inactivos: true })])
+  return { activos, inactivos }
+})
 recargar()
+const verInactivos = ref(false)
 
 const raiz = ref<HTMLElement | null>(null)
 const { animar } = useEntrada(raiz)
@@ -27,9 +34,11 @@ const COLOR_ROL: Record<RolUsuario, string> = {
   mantenimiento: 'var(--mbc-sky)',
   residente: 'var(--mbc-mint)',
 }
-const usuarios = computed(() =>
-  [...(datos.value ?? [])].sort((a, b) => ORDEN.indexOf(a.rol) - ORDEN.indexOf(b.rol) || a.nombre.localeCompare(b.nombre, 'es')),
-)
+const ordenar = (l: Usuario[]) =>
+  [...l].sort((a, b) => ORDEN.indexOf(a.rol) - ORDEN.indexOf(b.rol) || a.nombre.localeCompare(b.nombre, 'es'))
+const usuarios = computed(() => ordenar(datos.value?.activos ?? []))
+const inactivos = computed(() => ordenar(datos.value?.inactivos ?? []))
+const lista = computed(() => (verInactivos.value ? inactivos.value : usuarios.value))
 const cuenta = computed(() => {
   const c: Record<RolUsuario, number> = { administrador: 0, mantenimiento: 0, residente: 0 }
   for (const u of usuarios.value) c[u.rol]++
@@ -58,6 +67,11 @@ function validar() {
 }
 
 const { cargar: recargarTecnicos } = useTecnicos()
+function alCambiar(rolCambiado: RolUsuario) {
+  if (rolCambiado === 'mantenimiento') recargarTecnicos(true)
+  recargar(true)
+}
+
 async function crear() {
   errorGeneral.value = ''
   if (!validar() || enviando.value) return
@@ -69,8 +83,7 @@ async function crear() {
     email.value = ''
     password.value = ''
     rol.value = 'residente'
-    if (u.rol === 'mantenimiento') recargarTecnicos(true)
-    recargar(true)
+    alCambiar(u.rol)
   } catch (e) {
     errorGeneral.value = mensajeDeError(e)
   } finally {
@@ -80,7 +93,7 @@ async function crear() {
 </script>
 
 <template>
-  <section ref="raiz" class="plano" data-cursor="nivel" aria-labelledby="h1">
+  <section ref="raiz" class="plano" aria-labelledby="h1">
     <div class="plano-grid" aria-hidden="true"></div>
     <div class="wrap vista">
       <p class="eyebrow" data-enter>Usuarios · {{ session.usuario?.edificioNombre }}</p>
@@ -101,15 +114,23 @@ async function crear() {
               <span class="stud" aria-hidden="true"></span>
               <span class="tag">Directorio</span>
             </div>
+            <div class="seg" role="group" aria-label="Qué cuentas ver" style="margin-bottom: 8px">
+              <button type="button" :aria-pressed="!verInactivos" @click="verInactivos = false">Activas <span class="n">{{ usuarios.length }}</span></button>
+              <button type="button" :aria-pressed="verInactivos" @click="verInactivos = true">Desactivadas <span class="n">{{ inactivos.length }}</span></button>
+            </div>
+            <p v-if="verInactivos && inactivos.length === 0" class="b-meta" style="padding: 12px 0">
+              Nadie tiene la cuenta desactivada. Cuando alguien deje el edificio o el piloto, desactívalo desde "Gestionar".
+            </p>
             <ul class="usuarios">
-              <li v-for="u in usuarios" :key="u.id" class="usuario">
-                <span class="usuario-rol" :style="{ '--c': COLOR_ROL[u.rol] }" aria-hidden="true"></span>
-                <span class="usuario-n">
-                  <span>{{ u.nombre }}<span v-if="u.id === session.usuario?.id" class="muted"> (tú)</span></span>
-                  <span class="usuario-e mono">{{ u.email }}</span>
-                </span>
-                <span class="tag" :style="{ background: COLOR_ROL[u.rol] }">{{ textoRol[u.rol] }}</span>
-              </li>
+              <FilaUsuario
+                v-for="u in lista"
+                :key="u.id"
+                :usuario="u"
+                :activo="!verInactivos"
+                :es-yo="u.id === session.usuario?.id"
+                :color="COLOR_ROL[u.rol]"
+                @cambio="alCambiar"
+              />
             </ul>
           </div>
         </div>
@@ -141,11 +162,15 @@ async function crear() {
             </div>
             <div class="field">
               <div class="f-box">
-                <input id="u-password" v-model="password" class="f-in" type="password" autocomplete="new-password" placeholder=" " :aria-invalid="errores.password ? 'true' : undefined" aria-describedby="u-password-err" @input="errores.password = ''" />
+                <input id="u-password" v-model="password" class="f-in mono" type="text" spellcheck="false" autocomplete="off" placeholder=" " :aria-invalid="errores.password ? 'true' : undefined" aria-describedby="u-password-err" @input="errores.password = ''" />
                 <label for="u-password">Contraseña inicial</label>
                 <span class="pour" aria-hidden="true"></span>
               </div>
               <p id="u-password-err" class="err">{{ errores.password }}</p>
+              <p class="hint contador">
+                <span>La persona la cambia al entrar, en "Mi cuenta".</span>
+                <button class="btn ghost small" type="button" @click="password = generarClave(); errores.password = ''">Sugerir una</button>
+              </p>
             </div>
             <fieldset class="chips">
               <legend>Rol</legend>

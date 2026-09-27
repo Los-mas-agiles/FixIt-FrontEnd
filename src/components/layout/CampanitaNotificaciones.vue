@@ -5,11 +5,11 @@ import * as notifApi from '@/api/notificaciones'
 import { mensajeDeError } from '@/api/client'
 import type { Notificacion } from '@/types/models'
 import { usePolling } from '@/composables/usePolling'
-import { usePush } from '@/composables/usePush'
 import { marcaTiempo } from '@/utils/fechas'
 import { plural } from '@/utils/textos'
 import { rollTo } from '@/lib/blockCity'
 import AppIcon from '@/components/ui/AppIcon.vue'
+import ActivarAvisos from './ActivarAvisos.vue'
 
 const router = useRouter()
 const avisos = ref<Notificacion[]>([])
@@ -22,7 +22,6 @@ const boton = ref<HTMLButtonElement | null>(null)
 const contador = ref<HTMLElement | null>(null)
 
 const noLeidas = computed(() => avisos.value.filter((a) => !a.leida).length)
-const push = usePush()
 
 async function cargar() {
   try {
@@ -60,7 +59,6 @@ async function leerTodas() {
 async function alternar() {
   abierta.value = !abierta.value
   if (abierta.value) {
-    push.revisar()
     await nextTick()
     panel.value?.querySelector<HTMLElement>('h2')?.focus()
   }
@@ -138,28 +136,7 @@ onBeforeUnmount(() => {
         </button>
       </div>
 
-      <div class="avisos-push">
-        <p v-if="push.permiso.value === 'no-soportado'" class="hint">
-          Este navegador no admite avisos en el equipo. Revisa la campanita de vez en cuando.
-        </p>
-        <p v-else-if="push.necesitaInstalarIOS.value" class="hint">
-          En iPhone, los avisos llegan solo si instalas FixIt: en Safari toca <strong>Compartir</strong> y luego
-          <strong>Agregar a inicio</strong>.
-        </p>
-        <template v-else-if="push.activo.value">
-          <p class="hint"><AppIcon name="check" /> Este equipo recibe tus avisos.</p>
-          <button class="btn ghost small" type="button" :disabled="push.ocupado.value" @click="push.desactivar">
-            Dejar de recibirlos aquí
-          </button>
-        </template>
-        <template v-else>
-          <p class="hint">Recibe los cambios de estado aunque tengas FixIt cerrado.</p>
-          <button class="btn small" type="button" :disabled="push.ocupado.value" @click="push.activar">
-            <AppIcon name="bell" />{{ push.ocupado.value ? 'Activando…' : 'Activar avisos en este equipo' }}
-          </button>
-        </template>
-        <p v-if="push.error.value" class="err" role="alert">{{ push.error.value }}</p>
-      </div>
+      <ActivarAvisos v-if="abierta" />
     </section>
   </div>
 </template>

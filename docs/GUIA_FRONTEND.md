@@ -190,9 +190,9 @@ Foto, descripción, badges, técnico asignado y **línea de tiempo** con el `his
 
 ### KanbanView — mantenimiento y administrador (Fase 3)
 - 3 columnas: **Pendiente / En proceso / Resuelto**. En el celular, pestañas en vez de columnas.
-- Tarjetas ordenadas por prioridad (alta primero) y luego por antigüedad. Color del borde según la prioridad.
+- Tarjetas ordenadas por prioridad (alta primero) y luego por antigüedad. La tarjeta lleva el color de su estado y la prioridad va en un tag con barras de nivel.
 - Botón en cada tarjeta: "Tomar" (pendiente → en proceso) y "Marcar resuelta" (en proceso → resuelto). **No hace falta arrastrar y soltar.**
-- Técnico: filtro "Solo mis incidencias" activado por defecto.
+- Técnico: filtro "Solo las mías y las libres" activado por defecto (sus incidencias + las pendientes sin técnico, para poder tomarlas).
 - Admin: selector de técnico en las pendientes (`GET /usuarios?rol=mantenimiento`).
 - Si el backend responde `LIMITE_WIP` o `TRANSICION_INVALIDA`, mostrar su mensaje en un aviso.
 - Polling cada 20 s.
@@ -200,11 +200,16 @@ Foto, descripción, badges, técnico asignado y **línea de tiempo** con el `his
 ### DashboardView — administrador (Fase 6)
 - Filtros: periodo (7 días / 14 días / 30 días) y prioridad (todas / alta / media / baja).
 - Tarjetas: **Cycle time**, **Lead time**, **WIP**, **Throughput**, **Precisión IA**. Si el valor es `null`, mostrar "Sin datos" (no "0").
-- Tarjeta destacada del **Objetivo 2**: cycle time de prioridad alta vs. meta de 48 h (verde si cumple, rojo si no).
+- Tarjeta destacada del **Objetivo 2**: cycle time de prioridad alta vs. meta de 48 h, con "Cumple" / "No cumple" en texto e ícono.
+- Tarjeta del **Objetivo 4**: `clasificadasPorIA` (sobre todas las prioridades) vs. meta de 100 %.
 - **Gráfico CFD** (áreas apiladas por estado, un punto por día) con `GET /kpis/cfd`.
 
 ### UsuariosView — administrador (Fase 1 o al final)
-Tabla con los usuarios del edificio y formulario para crear uno (nombre, email, contraseña, rol).
+Lista de los usuarios del edificio (activas / desactivadas) y formulario para crear uno (nombre, email, contraseña, rol).
+En cada cuenta, "Gestionar": **contraseña temporal** (`PATCH /usuarios/:id` con `password`) y **desactivar** (`activo: false`, con aviso si es un técnico con incidencias en proceso). Las desactivadas se pueden **reactivar**. El admin no puede desactivarse a sí mismo.
+
+### CuentaView — todos (`/cuenta`, Fase 7)
+Datos del usuario, cambio de contraseña propia (`PATCH /auth/password`: contraseña actual, nueva y repetirla; si la actual no coincide el backend responde `400` y el error se muestra en el campo, sin cerrar sesión), activar los avisos push de ese equipo y salir. Se entra tocando el nombre en el header.
 
 ### Campanita de notificaciones (Fase 5)
 En el header: contador de no leídas (polling cada 30 s), lista desplegable, "marcar todas como leídas", y al tocar una se abre la incidencia.
@@ -221,8 +226,12 @@ En el header: contador de no leídas (polling cada 30 s), lista desplegable, "ma
 
 ## 9. Diseño
 
+Seguimos la guía de estilos **Modular Block City** (ver la sección "Estilo visual" del README): bloques con radio 20 px, sombra sólida y *stud*, pastel sobre casi-blanco, un solo easing y cursor del sistema.
+
 - **Primero el celular** (375 px), luego escritorio. Botones de al menos 44 px de alto.
-- Colores de prioridad consistentes en toda la app: alta = rojo, media = ámbar, baja = verde. Estados: pendiente = gris, en proceso = azul, resuelto = verde.
+- **Estados:** pendiente = durazno, en proceso = celeste, resuelto = menta, siempre con texto y *stepper* (el color nunca es la única señal).
+- **Prioridad:** tag con barras de nivel y texto ("Prioridad alta"); la alta va en tag oscuro. La guía de estilos no usa rojo en la interfaz: los errores van en `--mbc-err`, solo en texto y bordes de campos.
+- Un bloque oscuro por vista para la acción o el dato principal ("Tu parte", Objetivo 2).
 - Siempre mostrar el estado de **carga**, de **error** (con botón "Reintentar") y de **lista vacía**.
 - Textos en español, etiquetas legibles (usar `utils/textos.ts`, nunca mostrar `en_proceso` crudo).
 

@@ -9,6 +9,11 @@ const emit = defineEmits<{ elegir: [tecnicoId: string | null] }>()
 
 const idCampo = computed(() => `tec-${props.incidencia.id}`)
 const valor = computed(() => props.incidencia.asignadoA?.id ?? '')
+// Si el técnico asignado fue desactivado ya no viene en la lista: se muestra igual para que el admin lo reasigne
+const asignadoInactivo = computed(() => {
+  const a = props.incidencia.asignadoA
+  return a && props.tecnicos.length > 0 && !props.tecnicos.some((t) => t.id === a.id) ? a : null
+})
 
 function cambiar(e: Event) {
   const v = (e.target as HTMLSelectElement).value
@@ -21,6 +26,7 @@ function cambiar(e: Event) {
     <div class="f-box">
       <select :id="idCampo" class="f-in" :value="valor" :disabled="deshabilitado" @change="cambiar">
         <option value="" :disabled="incidencia.estado !== 'pendiente'">Sin técnico</option>
+        <option v-if="asignadoInactivo" :value="asignadoInactivo.id" disabled>{{ asignadoInactivo.nombre }} (desactivado)</option>
         <option v-for="t in tecnicos" :key="t.id" :value="t.id">{{ t.nombre }}</option>
       </select>
       <label :for="idCampo">Técnico</label>

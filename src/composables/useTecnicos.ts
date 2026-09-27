@@ -10,7 +10,7 @@ export function useTecnicos() {
   function cargar(forzar = false) {
     if (pedido && !forzar) return pedido
     pedido = usuariosApi
-      .listar('mantenimiento')
+      .listar({ rol: 'mantenimiento' })
       .then((r) => { tecnicos.value = r })
       .catch(() => { pedido = null })
     return pedido

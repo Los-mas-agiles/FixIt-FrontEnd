@@ -90,7 +90,7 @@ async function enviar() {
 </script>
 
 <template>
-  <section ref="raiz" class="plano" data-cursor="nivel" aria-labelledby="h1">
+  <section ref="raiz" class="plano" aria-labelledby="h1">
     <div class="plano-grid" aria-hidden="true"></div>
     <div class="wrap vista">
       <div class="split">

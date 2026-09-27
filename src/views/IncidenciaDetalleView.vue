@@ -126,7 +126,7 @@ watch(() => inc.value?.fotoUrl, () => { fotoRota.value = false })
 </script>
 
 <template>
-  <section ref="raiz" class="plano" data-cursor="nivel" aria-labelledby="h1">
+  <section ref="raiz" class="plano" aria-labelledby="h1">
     <div class="plano-grid" aria-hidden="true"></div>
     <div class="wrap vista">
       <RouterLink class="volver" :to="volverA"><AppIcon name="back" />{{ volverTexto }}</RouterLink>
@@ -186,7 +186,7 @@ watch(() => inc.value?.fotoUrl, () => { fotoRota.value = false })
         </div>
 
         <div class="stack-aside">
-          <aside v-tilt class="block on-dark" data-cursor="llana" data-enter style="padding: 24px">
+          <aside v-tilt class="block on-dark" data-enter style="padding: 24px">
             <div class="b-head">
               <span class="stud" aria-hidden="true"></span>
               <span class="tag">Tu parte</span>

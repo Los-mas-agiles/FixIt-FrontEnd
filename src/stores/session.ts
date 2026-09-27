@@ -68,7 +68,7 @@ export const useSessionStore = defineStore('session', () => {
 
   configurarCliente({
     getToken: () => token.value,
-    onNoAutenticado: () => logout('Tu sesión venció. Vuelve a entrar para continuar.'),
+    onNoAutenticado: () => logout('Tu sesión terminó (venció o tu cuenta cambió). Vuelve a entrar para continuar.'),
   })
 
   return { token, usuario, lista, motivoCierre, rol, autenticado, login, logout, restaurar }

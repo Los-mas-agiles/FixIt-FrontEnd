@@ -51,6 +51,7 @@ const router = createRouter({
       component: () => import('@/views/admin/UsuariosView.vue'),
       meta: { roles: ['administrador'], titulo: 'Usuarios' },
     },
+    { path: '/cuenta', name: 'cuenta', component: () => import('@/views/CuentaView.vue'), meta: { titulo: 'Mi cuenta' } },
     { path: '/:ruta(.*)*', name: 'no-encontrado', component: () => import('@/views/NotFoundView.vue'), meta: { publica: true, titulo: 'No encontrado' } },
   ],
   scrollBehavior(to, from, guardado) {

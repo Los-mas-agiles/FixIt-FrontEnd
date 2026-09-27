@@ -26,11 +26,19 @@ async function salir() {
 
     <div v-if="session.usuario" class="header-der">
       <CampanitaNotificaciones />
-      <p class="quien">
-        <span class="quien-n">{{ primerNombre(session.usuario.nombre) }}</span>
-        <span class="quien-r">{{ textoRol[session.usuario.rol] }}</span>
-      </p>
-      <button class="btn ghost small salir" type="button" @click="salir">
+      <RouterLink
+        class="quien"
+        :to="{ name: 'cuenta' }"
+        :aria-label="`Mi cuenta: ${session.usuario.nombre}, ${textoRol[session.usuario.rol]}`"
+        :aria-current="$route.name === 'cuenta' ? 'page' : undefined"
+      >
+        <AppIcon name="user" class="quien-ic" />
+        <span class="quien-t">
+          <span class="quien-n">{{ primerNombre(session.usuario.nombre) }}</span>
+          <span class="quien-r">{{ textoRol[session.usuario.rol] }}</span>
+        </span>
+      </RouterLink>
+      <button class="btn ghost small salir" type="button" aria-label="Salir" @click="salir">
         <AppIcon name="exit" /><span class="salir-t">Salir</span>
       </button>
     </div>

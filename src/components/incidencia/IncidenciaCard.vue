@@ -22,7 +22,6 @@ const idTitulo = computed(() => `inc-${props.incidencia.id}`)
     v-tilt
     class="block card inc-card"
     :style="{ '--c': colorEstado[i.estado] }"
-    data-cursor="llana"
     :aria-labelledby="idTitulo"
   >
     <div class="b-head">
