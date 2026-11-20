@@ -20,7 +20,7 @@ Pensada primero para el celular e instalable como app (PWA).
 [**Abrir la app**](https://fix-it-front-end-three.vercel.app) ·
 [API (Swagger)](https://fix-it-back-end.vercel.app/api/docs) ·
 [Repositorio del backend](https://github.com/Los-mas-agiles/FixIt-BackEnd) ·
-[Landing page](https://github.com/Los-mas-agiles/FixIt-LandingPage)
+[Landing page](https://fixit-lemon-tau.vercel.app) ([repositorio](https://github.com/Los-mas-agiles/FixIt-LandingPage))
 
 <img src="docs/img/login-escritorio.png" alt="Pantalla de inicio de sesión de FixIt" width="820" />
 
@@ -248,10 +248,12 @@ docs/             # guía, contrato de API, plan de fases e imágenes
 Cada push a `main` y cada Pull Request pasan por **GitHub Actions** ([`ci.yml`](.github/workflows/ci.yml)):
 
 ```
-npm ci  →  lint  →  typecheck  →  tests  →  build
+npm ci  →  npm audit  →  lint  →  typecheck  →  tests  →  build
 ```
 
 Además, Vercel publica un *preview* de cada PR para revisarlo antes del merge.
+
+El paso `npm audit` falla si una dependencia de producción tiene una vulnerabilidad alta o crítica (en local: `npm audit --omit=dev`). Los tests (`tests/`) cubren el cliente HTTP, los guards del router, el store de sesión y los composables `useCarga`, `usePolling` y `useToast`.
 
 ## Estado por fases
 
